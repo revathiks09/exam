@@ -1,0 +1,102 @@
+{% extends 'controller/controller_layout.html' %}
+
+{% block title %}Edit Exam Schedule - ExamEase{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h3 class="page-title">
+        <span class="page-title-icon bg-gradient-primary text-white me-2">
+            <i class="icon-calendar"></i>
+        </span>
+        Edit Exam Schedule
+    </h3>
+
+    <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'controller_dashboard' %}">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'exam_timetable' %}">Timetable</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                Edit Schedule
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="col-md-8 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title">Edit Schedule Form</h4>
+
+                <form method="POST" action="{% url 'update_exam_schedule' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="schedule_id" value="{{ schedule.id }}">
+
+                    <!-- SUBJECT -->
+                    <div class="form-group">
+                        <label for="subject_id">Subject *</label>
+                        <select class="form-control" id="subject_id" name="subject_id" required>
+                            <option value="">Select Subject</option>
+                            {% for subject in subjects %}
+                                <option value="{{ subject.id }}"
+                                    {% if subject.id == schedule.subject.id %}selected{% endif %}>
+                                    {{ subject.subject_name }}
+                                    (Semester {{ subject.semester.semester_no }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- EXAM DATE -->
+                    <div class="form-group">
+                        <label for="exam_date">Exam Date *</label>
+                        <input type="date"
+                               class="form-control"
+                               id="exam_date"
+                               name="exam_date"
+                               value="{{ schedule.exam_date|date:'Y-m-d' }}"
+                               required>
+                    </div>
+
+                    <!-- START TIME -->
+                    <div class="form-group">
+                        <label for="start_time">Start Time *</label>
+                        <input type="time"
+                               class="form-control"
+                               id="start_time"
+                               name="start_time"
+                               value="{{ schedule.start_time|time:'H:i' }}"
+                               required>
+                    </div>
+
+                    <!-- END TIME -->
+                    <div class="form-group">
+                        <label for="end_time">End Time *</label>
+                        <input type="time"
+                               class="form-control"
+                               id="end_time"
+                               name="end_time"
+                               value="{{ schedule.end_time|time:'H:i' }}"
+                               required>
+                    </div>
+
+                    <!-- ACTIONS -->
+                    <button type="submit" class="btn btn-primary mr-2">
+                        <i class="icon-refresh"></i> Update Schedule
+                    </button>
+
+                    <a href="{% url 'exam_timetable' %}" class="btn btn-light">
+                        Cancel
+                    </a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

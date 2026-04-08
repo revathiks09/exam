@@ -1,0 +1,89 @@
+{% extends 'evaluator/evaluator_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Moderate Marks</h4>
+                <p class="card-description">
+                    Review and moderate marks for submitted scripts.
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Subject</th>
+                                <th>Marks Obtained</th>
+                                <th>Moderated Marks</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for script in scripts %}
+                            <tr>
+                                <td>{{ script.student_name }}</td>
+                                <td>{{ script.subject_name }}</td>
+                                <td>{{ script.marks_obtained }}</td>
+                                <td>{{ script.moderated_marks|default:"--" }}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#moderateModal{{ script.id }}">
+                                        Moderate
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No scripts available for moderation.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Moderation Modals -->
+{% for script in scripts %}
+<div class="modal fade" id="moderateModal{{ script.id }}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Moderate Marks - {{ script.student_name }}</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'apply_moderation' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="mid" value="{{ script.id }}">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" class="form-control" value="{{ script.subject_name }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Original Marks</label>
+                        <input type="text" class="form-control" value="{{ script.marks_obtained }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="moderated_marks{{ script.id }}">Moderated Marks</label>
+                        <input type="number" step="0.5" class="form-control" id="moderated_marks{{ script.id }}"
+                            name="moderated_marks" value="{{ script.moderated_marks|default:script.marks_obtained }}"
+                            required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning">Apply Moderation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

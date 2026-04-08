@@ -1,0 +1,39 @@
+{% extends 'controller/controller_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Edit Assignment</h4>
+                <p class="card-description">
+                    Re-assign scripts for <strong>{{ subject.subject_name }}</strong> currently pending with <strong>{{
+                        current_evaluator.name }}</strong>.
+                </p>
+
+                <form class="forms-sample" method="POST">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label>Current Evaluator</label>
+                        <input type="text" class="form-control" value="{{ current_evaluator.name }}" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new_evaluator_id">New Evaluator</label>
+                        <select class="form-control" id="new_evaluator_id" name="new_evaluator_id" required>
+                            <option value="">Select New Evaluator</option>
+                            {% for evaluator in evaluators %}
+                            <option value="{{ evaluator.id }}">{{ evaluator.name }} ({{ evaluator.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning mr-2">Update Assignment</button>
+                    <a href="{% url 'view_assignments' %}" class="btn btn-light">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

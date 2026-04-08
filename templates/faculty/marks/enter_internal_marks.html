@@ -1,0 +1,103 @@
+{% extends 'faculty/faculty_layout.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title">Enter Internal Marks</h4>
+                <p class="card-description">
+                    Select Subject and Semester to enter marks for students.
+                </p>
+
+                <!-- ================= FILTER FORM ================= -->
+                <form class="form-inline" method="POST" action="{% url 'enter_internal_marks' %}"
+                      style="margin-bottom: 30px;">
+                    {% csrf_token %}
+                    <input type="hidden" name="filter" value="true">
+
+                    <!-- Subject -->
+                    <label class="sr-only" for="subject">Subject</label>
+                    <select class="form-control mb-2 mr-sm-4" id="subject" name="subject" required>
+                        <option value="">-- Select Subject --</option>
+                        {% for sub in subjects %}
+                            <option value="{{ sub.id }}"
+                                {% if sel_sub == sub.id %}selected{% endif %}>
+                                {{ sub.subject_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Semester -->
+                    <label class="sr-only" for="semester">Semester</label>
+                    <select class="form-control mb-2 mr-sm-4" id="semester" name="semester" required>
+                        <option value="">-- Select Semester --</option>
+                        {% for sem in semesters %}
+                            <option value="{{ sem.id }}"
+                                {% if sel_sem == sem.id %}selected{% endif %}>
+                                Semester {{ sem.semester_no }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit" class="btn btn-primary mb-2">
+                        Load Students
+                    </button>
+                </form>
+
+                <!-- ================= STUDENTS TABLE ================= -->
+                {% if students %}
+                <form method="POST" action="{% url 'save_internal_marks' %}">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="subject_id" value="{{ sel_sub }}">
+                    <input type="hidden" name="semester_id" value="{{ sel_sem }}">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Reg. Number</th>
+                                    <th>Student Name</th>
+                                    <th>Internal Marks (Max 20)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                <tr>
+                                    <td>{{ student.id }}</td>
+                                    <td>{{ student.name }}</td>
+                                    <td>
+                                        <input type="number"
+                                               class="form-control"
+                                               name="marks-{{ student.id }}"
+                                               min="0"
+                                               max="20"
+                                               value="{{ student.current_mark|default_if_none:'' }}"
+                                               placeholder="Enter Marks"
+                                               style="width: 150px;">
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button type="submit" class="btn btn-success mt-4">
+                        Save Marks
+                    </button>
+                </form>
+
+                {% elif sel_sub %}
+                    <div class="alert alert-warning mt-4">
+                        No students found for this selection.
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

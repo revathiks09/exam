@@ -1,0 +1,88 @@
+{% extends 'admin/admin_layout.html' %}
+{% load static %}
+
+{% block title %}Edit Semester - ExamEase{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Edit Semester</h1>
+
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item">
+                <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'semesters' %}">Semesters</a>
+            </li>
+            <li class="breadcrumb-item active">Edit Semester</li>
+        </ol>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-edit"></i> Edit Semester Information
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'update_semester' %}">
+                            {% csrf_token %}
+
+                            <input type="hidden" name="semester_id" value="{{ semester.id }}">
+
+                            <!-- COURSE -->
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Course <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select" name="course_id" required>
+                                    <option value="">Select Course</option>
+
+                                    {% for course in courses %}
+                                        <option value="{{ course.id }}"
+                                            {% if semester.course == course %}selected{% endif %}>
+                                            {{ course.course_name }} ({{ course.dept.dept_name }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- SEMESTER NUMBER -->
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Semester Number <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select" name="semester_no" required>
+                                    <option value="">Select Semester</option>
+
+                                    {% for i in "12345678"|make_list %}
+                                        <option value="{{ i }}"
+                                            {% if semester.semester_no == i|add:0 %}selected{% endif %}>
+                                            Semester {{ i }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- BUTTONS -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{% url 'semesters' %}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Cancel
+                                </a>
+
+                                <button type="submit" class="btn btn-info">
+                                    <i class="fas fa-save"></i> Update Semester
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

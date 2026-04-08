@@ -1,0 +1,62 @@
+{% extends 'admin/admin_layout.html' %}
+{% load static %}
+
+{% block title %}Add Subject - ExamEase{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h3 class="page-title">Add Subject</h3>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'subjects' %}">Subjects</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Add Subject</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">New Subject Details</h4>
+                <p class="card-description">
+                    Create a new subject and assign it to a semester and faculty.
+                </p>
+                <form class="forms-sample" action="{% url 'save_subject' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="subjectName">Subject Name</label>
+                        <input type="text" class="form-control" id="subjectName" name="subject_name"
+                            placeholder="e.g. Data Structures" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="semesterSelect">Semester</label>
+                        <select class="form-control" id="semesterSelect" name="semester_id" required>
+                            <option value="">-- Select Semester --</option>
+                            {% for sem in semesters %}
+                            <option value="{{ sem.id }}">
+                                {{ sem.course.course_name }} - Semester {{ sem.semester_no }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="facultySelect">Assign Faculty</label>
+                        <select class="form-control" id="facultySelect" name="faculty_id" required>
+                            <option value="">-- Select Faculty --</option>
+                            {% for fac in faculty_list %}
+                            <option value="{{ fac.id }}">{{ fac.name }} ({{ fac.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary me-2">Save Subject</button>
+                    <a href="{% url 'subjects' %}" class="btn btn-light">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,337 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>ExamEase - Admin Dashboard</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="{% static 'admin/' %}assets/vendors/simple-line-icons/css/simple-line-icons.css">
+  <link rel="stylesheet" href="{% static 'admin/' %}assets/vendors/flag-icon-css/css/flag-icons.min.css">
+  <link rel="stylesheet" href="{% static 'admin/' %}assets/vendors/css/vendor.bundle.base.css">
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="{% static 'admin/' %}assets/vendors/font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="{% static 'admin/' %}assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css">
+  <!-- Layout styles -->
+  <link rel="stylesheet" href="{% static 'admin/' %}assets/css/vertical-light-layout/style.css">
+  <link rel="shortcut icon" href="{% static 'admin/' %}assets/images/favicon.png" />
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- Navbar -->
+    <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo" href="{% url 'admin_dashboard' %}">
+          <h3 class="text-primary mb-0"><i class="icon-graduation"></i> ExamEase</h3>
+        </a>
+        <a class="navbar-brand brand-logo-mini" href="{% url 'admin_dashboard' %}">
+          <i class="icon-graduation text-primary"></i>
+        </a>
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="icon-menu"></span>
+        </button>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center">
+        <h5 class="mb-0 font-weight-medium d-none d-lg-flex">Welcome to ExamEase Admin Panel!</h5>
+        <ul class="navbar-nav navbar-nav-right">
+          <li class="nav-item dropdown d-none d-xl-inline-flex user-dropdown">
+            <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <span class="font-weight-normal">{{ request.session.user_name }}</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+              <div class="dropdown-header text-center">
+                <p class="mb-1 mt-3">{{ request.session.user_name }}</p>
+                <p class="font-weight-light text-muted mb-0">{{ request.session.semail }}</p>
+              </div>
+              <a class="dropdown-item" href="{% url 'change_password' %}">
+                <i class="dropdown-item-icon icon-lock text-primary"></i> Change Password
+              </a>
+              <a class="dropdown-item" href="{% url 'admin_logout' %}">
+                <i class="dropdown-item-icon icon-power text-primary"></i> Sign Out
+              </a>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+          data-toggle="offcanvas">
+          <span class="icon-menu"></span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="container-fluid page-body-wrapper">
+      <!-- Sidebar -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item nav-profile">
+            <a href="#" class="nav-link">
+              <div class="profile-image">
+                <img class="img-xs rounded-circle" src="{% static 'admin/' %}assets/images/faces/face8.jpg"
+                  alt="profile">
+                <div class="dot-indicator bg-success"></div>
+              </div>
+              <div class="text-wrapper">
+                <p class="profile-name">{{ request.session.user_name }}</p>
+                <p class="designation">Administrator</p>
+              </div>
+            </a>
+          </li>
+
+          <li class="nav-item nav-category"><span class="nav-link">Dashboard</span></li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_dashboard' %}">
+              <span class="menu-title">Dashboard</span>
+              <i class="icon-screen-desktop menu-icon"></i>
+            </a>
+          </li>
+
+          <li class="nav-item nav-category"><span class="nav-link">Academic Setup</span></li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'departments' %}">
+              <span class="menu-title">Departments</span>
+              <i class="icon-organization menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'courses' %}">
+              <span class="menu-title">Courses</span>
+              <i class="icon-graduation menu-icon"></i>
+            </a>
+          </li>
+          <!--  -->
+
+          <li class="nav-item nav-category"><span class="nav-link">User Management</span></li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'users' %}">
+              <span class="menu-title">All Users</span>
+              <i class="icon-people menu-icon"></i>
+            </a>
+          </li>
+
+          <li class="nav-item nav-category"><span class="nav-link">Reports & System</span></li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'academic_reports' %}">
+              <span class="menu-title">Academic Reports</span>
+              <i class="icon-chart menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'system_logs' %}">
+              <span class="menu-title">System Logs</span>
+              <i class="icon-list menu-icon"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Main Panel -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+
+          <!-- Statistics Cards -->
+          <div class="row">
+            <div class="col-md-3 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title text-md-center text-xl-left">Total Students</p>
+                  <div
+                    class="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                    <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">{{ total_students }}</h3>
+                    <i class="icon-user icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+                  </div>
+                  <p class="mb-0 mt-2 text-success">Student accounts</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title text-md-center text-xl-left">Total Faculty</p>
+                  <div
+                    class="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                    <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">{{ total_faculty }}</h3>
+                    <i class="icon-user icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+                  </div>
+                  <p class="mb-0 mt-2 text-primary">Faculty members</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title text-md-center text-xl-left">Total Courses</p>
+                  <div
+                    class="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                    <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">{{ total_courses }}</h3>
+                    <i class="icon-graduation icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+                  </div>
+                  <p class="mb-0 mt-2 text-warning">Active courses</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title text-md-center text-xl-left">Departments</p>
+                  <div
+                    class="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                    <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">{{ total_departments }}</h3>
+                    <i class="icon-organization icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+                  </div>
+                  <p class="mb-0 mt-2 text-danger">Active departments</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="row quick-action-toolbar">
+            <div class="col-md-12 grid-margin">
+              <div class="card">
+                <div class="card-header d-block d-md-flex">
+                  <h5 class="mb-0">Quick Actions</h5>
+                  <p class="ms-auto mb-0">Manage your examination system efficiently</p>
+                </div>
+                <div class="d-md-flex row m-0 quick-action-btns" role="group">
+                  <div class="col-sm-6 col-md-3 p-3 text-center btn-wrapper">
+                    <a href="{% url 'add_user' %}" class="btn px-0">
+                      <i class="icon-user me-2"></i> Add User
+                    </a>
+                  </div>
+                  <div class="col-sm-6 col-md-3 p-3 text-center btn-wrapper">
+                    <a href="{% url 'add_department' %}" class="btn px-0">
+                      <i class="icon-organization me-2"></i> Add Department
+                    </a>
+                  </div>
+                  <div class="col-sm-6 col-md-3 p-3 text-center btn-wrapper">
+                    <a href="{% url 'add_course' %}" class="btn px-0">
+                      <i class="icon-graduation me-2"></i> Add Course
+                    </a>
+                  </div>
+                  <div class="col-sm-6 col-md-3 p-3 text-center btn-wrapper">
+                    <a href="{% url 'academic_reports' %}" class="btn px-0">
+                      <i class="icon-chart me-2"></i> View Reports
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Recent Users</h4>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Role</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for user in recent_users %}
+                        <tr>
+                          <td>{{ user.name }}</td>
+                          <td>{{ user.email }}</td>
+                          <td>
+                            {% if user.role == 'admin' %}
+                            <span class="badge badge-danger">Admin</span>
+                            {% elif user.role == 'faculty' %}
+                            <span class="badge badge-primary">Faculty</span>
+                            {% elif user.role == 'student' %}
+                            <span class="badge badge-success">Student</span>
+                            {% else %}
+                            <span class="badge badge-warning">{{ user.role }}</span>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {% if user.status == 1 %}
+                            <span class="badge badge-success">Active</span>
+                            {% else %}
+                            <span class="badge badge-danger">Inactive</span>
+                            {% endif %}
+                          </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                          <td colspan="4" class="text-center">No recent users</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Recent Login Sessions</h4>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>User</th>
+                          <th>Login Time</th>
+                          <th>IP Address</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for login in recent_logins %}
+                        <tr>
+                          <td>{{ login.user.name }}</td>
+                          <td>{{ login.login_time|date:"M d, H:i" }}</td>
+                          <td>{{ login.ip_address }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                          <td colspan="3" class="text-center">No recent logins</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- Footer -->
+        <footer class="footer">
+          <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">
+              Copyright © 2026 ExamEase. All rights reserved.
+            </span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">
+              Examination Management System
+            </span>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- plugins:js -->
+  <script src="{% static 'admin/' %}assets/vendors/js/vendor.bundle.base.js"></script>
+  <script src="{% static 'admin/' %}assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <script src="{% static 'admin/' %}assets/js/jquery.cookie.js"></script>
+  <!-- inject:js -->
+  <script src="{% static 'admin/' %}assets/js/off-canvas.js"></script>
+  <script src="{% static 'admin/' %}assets/js/hoverable-collapse.js"></script>
+  <script src="{% static 'admin/' %}assets/js/misc.js"></script>
+  <script src="{% static 'admin/' %}assets/js/settings.js"></script>
+  <script src="{% static 'admin/' %}assets/js/todolist.js"></script>
+</body>
+
+</html>

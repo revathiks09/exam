@@ -1,0 +1,18 @@
+Checking Courses and Departments:
+Course: B.Tech Computer Science (ID: 1), Dept: Computer Science (ID: 1)
+Course: B.Tech Electronics & Communication (ID: 2), Dept: Electronics & Communication (ID: 2)
+Course: B.Tech Mechanical Engineering (ID: 3), Dept: Mechanical Engineering (ID: 3)
+Course: B.Tech Civil Engineering (ID: 4), Dept: Civil Engineering (ID: 4)
+Course: B.Tech Information Technology (ID: 5), Dept: Information Technology (ID: 5)
+Course: B.Tech Electrical Engineering (ID: 6), Dept: Electrical Engineering (ID: 6)
+Course: M.Tech Computer Science (ID: 7), Dept: Computer Science (ID: 1)
+Course: M.Tech Information Technology (ID: 8), Dept: Information Technology (ID: 5)
+
+Checking Departments:
+Dept: Computer Science (ID: 1)
+Dept: Electronics & Communication (ID: 2)
+Dept: Mechanical Engineering (ID: 3)
+Dept: Civil Engineering (ID: 4)
+Dept: Information Technology (ID: 5)
+Dept: Electrical Engineering (ID: 6)
+Dept: ssrr (ID: 10)

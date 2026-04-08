@@ -1,0 +1,259 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ExamEase - Online Examination System">
+    <meta name="author" content="ExamEase">
+    <title>{% block title %}Exam Controller Dashboard - ExamEase{% endblock %}</title>
+
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="{% static 'admin/assets/vendors/simple-line-icons/css/simple-line-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/assets/vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="{% static 'admin/assets/css/vertical-light-layout/style.css' %}">
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <div class="container-scroller">
+        <!-- TOP NAVBAR -->
+        <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                <a class="navbar-brand brand-logo" href="{% url 'controller_dashboard' %}">
+                    <strong style="color: #fff; font-size: 24px;">ExamEase</strong>
+                </a>
+                <a class="navbar-brand brand-logo-mini" href="{% url 'controller_dashboard' %}">
+                    <strong style="color: #fff;">EE</strong>
+                </a>
+                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                    <span class="icon-menu"></span>
+                </button>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-center">
+                <h5 class="mb-0 font-weight-medium d-none d-lg-flex">Welcome to Exam Controller Panel</h5>
+                <ul class="navbar-nav navbar-nav-right">
+                    <li class="nav-item dropdown d-none d-xl-inline-flex user-dropdown">
+                        <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="fas fa-user fa-fw"></i>
+                            <span class="font-weight-normal">{{ request.session.semail }}</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+                            <div class="dropdown-header text-center">
+                                <p class="mb-1 mt-3 font-weight-semibold">{{ request.session.semail }}</p>
+                                <p class="font-weight-light text-muted mb-0">Exam Controller</p>
+                            </div>
+                            <a class="dropdown-item" href="{% url 'controller_profile' %}">
+                                <i class="dropdown-item-icon icon-user text-primary"></i> My Profile
+                            </a>
+                            <a class="dropdown-item" href="{% url 'change_password_controller' %}">
+                                <i class="dropdown-item-icon icon-key text-primary"></i> Change Password
+                            </a>
+                            <a class="dropdown-item" href="{% url 'logout_user' %}">
+                                <i class="dropdown-item-icon icon-power text-primary"></i> Sign Out
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                    <span class="icon-menu"></span>
+                </button>
+            </div>
+        </nav>
+        <!-- partial -->
+
+        <div class="container-fluid page-body-wrapper">
+            <!-- SIDEBAR -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+                    <li class="nav-item navbar-brand-mini-wrapper">
+                        <a class="nav-link navbar-brand brand-logo-mini" href="{% url 'controller_dashboard' %}">
+                            <strong>EE</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item nav-profile">
+                        <a href="#" class="nav-link">
+                            <div class="profile-image">
+                                <i class="fas fa-user-circle" style="font-size: 40px; color: #fff;"></i>
+                                <div class="dot-indicator bg-success"></div>
+                            </div>
+                            <div class="text-wrapper">
+                                <p class="profile-name">{{ request.session.semail }}</p>
+                                <p class="designation">Exam Controller</p>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Core Section -->
+                    <li class="nav-item nav-category">
+                        <span class="nav-link">Core</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'controller_dashboard' %}">
+                            <span class="menu-title">Dashboard</span>
+                            <i class="icon-screen-desktop menu-icon"></i>
+                        </a>
+                    </li>
+
+                    <!-- Question Paper Control Section -->
+                    <li class="nav-item nav-category">
+                        <span class="nav-link">Question Paper Control</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'view_submitted_papers' %}">
+                            <span class="menu-title">Submitted Papers</span>
+                            <i class="icon-doc menu-icon"></i>
+                        </a>
+                    </li>
+
+                    <!-- Exam Management Section -->
+                    <li class="nav-item nav-category">
+                        <span class="nav-link">Exam Management</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#examMenu" aria-expanded="false"
+                            aria-controls="examMenu">
+                            <span class="menu-title">Exam Scheduling</span>
+                            <i class="icon-calendar menu-icon"></i>
+                        </a>
+                        <div class="collapse" id="examMenu">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'create_exam_schedule' %}">Create Schedule</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'exam_timetable' %}">View Timetable</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#seatingMenu" aria-expanded="false"
+                            aria-controls="seatingMenu">
+                            <span class="menu-title">Seating & Hall Tickets</span>
+                            <i class="icon-grid menu-icon"></i>
+                        </a>
+                        <div class="collapse" id="seatingMenu">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'generate_seating' %}">Generate Seating</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'controller_view_seating' %}">View Seating</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'generate_hall_ticket' %}">Generate Hall
+                                        Tickets</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'view_hall_tickets' %}">View Hall Tickets</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'view_assignments' %}">
+                            <span class="menu-title">Evaluator Assignments</span>
+                            <i class="icon-user-follow menu-icon"></i>
+                        </a>
+                    </li>
+
+                    <!-- Result Supervision Section -->
+                    <li class="nav-item nav-category">
+                        <span class="nav-link">Result Supervision</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'view_pending_marks' %}">
+                            <span class="menu-title">Pending Marks</span>
+                            <i class="icon-clock menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'monitor_mark_entry' %}">
+                            <span class="menu-title">Monitor Marks</span>
+                            <i class="icon-chart menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'approve_final_results' %}">
+                            <span class="menu-title">Approve Results</span>
+                            <i class="icon-badge menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'view_results' %}">
+                            <span class="menu-title">View Results</span>
+                            <i class="icon-eye menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'view_revaluation_requests' %}">
+                            <span class="menu-title">Revaluation Requests</span>
+                            <i class="icon-magnifier menu-icon"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- partial -->
+
+            <!-- MAIN CONTENT AREA -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <!-- Messages -->
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <strong>{{ message }}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    <!-- Page Content Block -->
+                    {% block content %}
+                    {% endblock %}
+                </div>
+                <!-- content-wrapper ends -->
+
+                <!-- FOOTER -->
+                <footer class="footer">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">
+                            Copyright © 2026 ExamEase. All rights reserved.
+                        </span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">
+                            Made with <i class="icon-heart text-danger"></i>
+                        </span>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+
+    <!-- plugins:js -->
+    <script src="{% static 'admin/assets/vendors/js/vendor.bundle.base.js' %}"></script>
+    <!-- endinject -->
+    <!-- inject:js -->
+    <script src="{% static 'admin/assets/js/off-canvas.js' %}"></script>
+    <script src="{% static 'admin/assets/js/hoverable-collapse.js' %}"></script>
+    <script src="{% static 'admin/assets/js/misc.js' %}"></script>
+    <script src="{% static 'admin/assets/js/settings.js' %}"></script>
+    <!-- endinject -->
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

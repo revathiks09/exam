@@ -1,0 +1,64 @@
+{% extends 'evaluator/evaluator_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="card-title">Assigned Scripts</h4>
+                </div>
+                <p class="card-description">
+                    List of scripts assigned to you for evaluation.
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Subject</th>
+                                <th>Status</th>
+                                <th>Marks Obtained</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for script in scripts %}
+                            <tr>
+                                <td>{{ script.student_name }}</td>
+                                <td>{{ script.subject_name }}</td>
+                                <td>
+                                    {% if script.status == 'Pending' %}
+                                    <label class="badge badge-warning">Pending</label>
+                                    {% elif script.status == 'Draft' %}
+                                    <label class="badge badge-info">Draft</label>
+                                    {% elif script.status == 'Submitted' or script.status == 'Finalized' %}
+                                    <label class="badge badge-success">{{ script.status }}</label>
+                                    {% else %}
+                                    <label class="badge badge-secondary">{{ script.status }}</label>
+                                    {% endif %}
+                                </td>
+                                <td>{{ script.marks_obtained|default:"--" }}</td>
+                                <td>
+                                    {% if script.status != 'Finalized' %}
+                                    <a href="{% url 'edit_marks' script.id %}" class="btn btn-primary btn-sm">
+                                        <i class="icon-pencil"></i> Evaluate
+                                    </a>
+                                    {% else %}
+                                    <button class="btn btn-secondary btn-sm" disabled>Locked</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No scripts assigned.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

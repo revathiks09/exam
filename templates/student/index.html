@@ -1,0 +1,113 @@
+{% extends 'student/student_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 grid-margin">
+        <div class="d-flex justify-content-between flex-wrap">
+            <div class="d-flex align-items-end flex-wrap">
+                <div class="me-md-3 me-xl-5">
+                    <h2>Student Dashboard</h2>
+                    <p class="mb-md-0">Welcome back! Manage your exams and results here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h4 class="card-title">My Semester</h4>
+                        <h2 class="mb-0 text-primary">{{ my_semester }}</h2>
+                    </div>
+                    <i class="icon-layers icon-lg text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <a href="{% url 'view_exam_timetable' %}" style="text-decoration: none;">
+                            <h4 class="card-title text-success">Upcoming Exams</h4>
+                        </a>
+                    </div>
+                    <i class="icon-calender icon-lg text-success"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <a href="{% url 'view_result' %}" style="text-decoration: none;">
+                            <h4 class="card-title text-info">Recent Results</h4>
+                        </a>
+                    </div>
+                    <i class="icon-graduation icon-lg text-info"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">My Subjects</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Subject Name</th>
+                                <th>Faculty</th>
+                                <th>Department</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for subject in my_subjects %}
+                            <tr>
+                                <td>{{ subject.subject_name }}</td>
+                                <td>{{ subject.faculty.name|default:"Not Assigned" }}</td>
+                                <td>{{ student.dept.dept_name }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">No subjects found for your semester ({{
+                                    my_semester }}).</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Quick Links</h4>
+                <div class="template-demo">
+                    <a href="{% url 'download_hall_ticket' %}" class="btn btn-outline-primary btn-fw">
+                        <i class="icon-tag"></i> Hall Ticket
+                    </a>
+                    <a href="{% url 'track_revaluation_status' %}" class="btn btn-outline-warn btn-fw">
+                        <i class="icon-refresh"></i> Revaluation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

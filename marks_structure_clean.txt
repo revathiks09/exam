@@ -1,0 +1,1 @@
+['id', 'student_id', 'subject_id', 'evaluator_id', 'marks_obtained', 'moderated_marks', 'status', 'internal_marks', 'external_marks']

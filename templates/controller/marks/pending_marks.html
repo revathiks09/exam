@@ -1,0 +1,81 @@
+{% extends 'controller/controller_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Pending Marks Approval</h4>
+                <p class="card-description">
+                    Review and approve marks finalized by evaluators.
+                </p>
+
+                <form method="POST" action="{% url 'approve_marks' %}">
+                    {% csrf_token %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="selectAll">
+                                    </th>
+                                    <th>Student</th>
+                                    <th>Subject</th>
+                                    <th>Evaluator</th>
+                                    <th>Marks Obtained</th>
+                                    <th>Moderated Marks</th>
+                                    <th>Final Marks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mark in pending_marks %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="mark_ids" value="{{ mark.id }}"
+                                            class="mark-checkbox">
+                                    </td>
+                                    <td>{{ mark.student_name }}</td>
+                                    <td>{{ mark.subject_name }}</td>
+                                    <td>{{ mark.evaluator_name }}</td>
+                                    <td>{{ mark.marks_obtained }}</td>
+                                    <td>{{ mark.moderated_marks|default:"--" }}</td>
+                                    <td>
+                                        <strong>{{ mark.moderated_marks|default:mark.marks_obtained }}</strong>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'reject_marks' mark.id %}" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Reject these marks?')">
+                                            Reject
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center">No pending marks for approval</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if pending_marks %}
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-success">
+                            <i class="icon-check"></i> Approve Selected
+                        </button>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('selectAll').addEventListener('change', function () {
+        const checkboxes = document.querySelectorAll('.mark-checkbox');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+</script>
+{% endblock %}

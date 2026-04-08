@@ -1,0 +1,145 @@
+{% extends 'admin/admin_layout.html' %}
+{% load static %}
+
+{% block title %}Result Statistics - ExamEase{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Result Statistics</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Result Statistics</li>
+        </ol>
+
+        <!-- Overall Statistics -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-primary text-white mb-4">
+                    <div class="card-body">
+                        <h3 class="mb-0">{{ total_results }}</h3>
+                        <p class="mb-0">Total Results</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-success text-white mb-4">
+                    <div class="card-body">
+                        <h3 class="mb-0">{{ pass_count }}</h3>
+                        <p class="mb-0">Passed</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-danger text-white mb-4">
+                    <div class="card-body">
+                        <h3 class="mb-0">{{ fail_count }}</h3>
+                        <p class="mb-0">Failed</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-info text-white mb-4">
+                    <div class="card-body">
+                        <h3 class="mb-0">{{ pass_percentage|floatformat:2 }}%</h3>
+                        <p class="mb-0">Pass Percentage</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grade Distribution -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-chart-pie me-1"></i>
+                        Grade Distribution
+                    </div>
+                    <div class="card-body">
+                        {% if grade_stats %}
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Grade</th>
+                                    <th>Count</th>
+                                    <th>Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for grade, count in grade_stats.items %}
+                                <tr>
+                                    <td><strong>{{ grade }}</strong></td>
+                                    <td>{{ count }}</td>
+                                    <td>
+                                        {% widthratio count total_results 100 as percentage %}
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width: {{ percentage }}%" aria-valuenow="{{ percentage }}"
+                                                aria-valuemin="0" aria-valuemax="100">
+                                                {{ percentage }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p class="text-muted">No grade distribution data available.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subject-wise Statistics -->
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-book me-1"></i>
+                        Subject-wise Performance
+                    </div>
+                    <div class="card-body">
+                        {% if subject_stats %}
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Pass %</th>
+                                    <th>Avg Marks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stat in subject_stats %}
+                                <tr>
+                                    <td>
+                                        {% if stat.subject %}
+                                        {{ stat.subject.subject_name }}
+                                        {% else %}
+                                        N/A
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="badge {% if stat.pass_percentage >= 75 %}bg-success{% elif stat.pass_percentage >= 50 %}bg-warning{% else %}bg-danger{% endif %}">
+                                            {{ stat.pass_percentage|floatformat:1 }}%
+                                        </span>
+                                    </td>
+                                    <td>{{ stat.average_marks|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p class="text-muted">No subject statistics available.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

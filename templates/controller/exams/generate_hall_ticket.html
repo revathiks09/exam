@@ -1,0 +1,53 @@
+{% extends 'controller/controller_layout.html' %}
+
+{% block title %}Generate Hall Tickets - ExamEase{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h3 class="page-title">
+        <span class="page-title-icon bg-gradient-primary text-white me-2">
+            <i class="icon-badge"></i>
+        </span> Generate Hall Tickets
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'controller_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Generate Hall Tickets</li>
+        </ul>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="col-md-8 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Generate Hall Tickets for Semester</h4>
+                <p class="card-description">Select a semester to generate hall tickets for all students</p>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="semester_id">Semester *</label>
+                        <select class="form-control" id="semester_id" name="semester_id" required>
+                            <option value="">Select Semester</option>
+                            {% for semester in semesters %}
+                            <option value="{{ semester.id }}">
+                                {{ semester.course.course_name }} - Semester {{ semester.semester_no }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="icon-info"></i> Hall tickets will be generated for all active students. Duplicate hall
+                        tickets will be skipped.
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">
+                        <i class="icon-badge"></i> Generate Hall Tickets
+                    </button>
+                    <a href="{% url 'view_hall_tickets' %}" class="btn btn-light">View Generated Tickets</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

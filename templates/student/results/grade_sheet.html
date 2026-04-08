@@ -1,0 +1,62 @@
+{% extends 'student/student_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body" id="gradeSheetArea">
+                <div class="text-center mb-4">
+                    <h3>ExamEase University</h3>
+                    <h5>Grade Sheet</h5>
+                    <p>Semester: {{ result.semester.semester_no }} | Date: {{ result.published_at|date:"Y-m-d" }}</p>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Student Name:</strong> {{ request.session.user_name }}<br>
+                        <strong>Email:</strong> {{ request.session.semail }}
+                    </div>
+                    <div class="col-6 text-right">
+                        <strong>Result ID:</strong> {{ result.id }}<br>
+                        <strong>Overall Grade:</strong> {{ result.grade }}
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Marks</th>
+                                <th>Pass/Fail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mark in marks_details %}
+                            <tr>
+                                <td>{{ mark.subject.subject_name }}</td>
+                                <td>{{ mark.marks_obtained }}</td>
+                                <td>
+                                    <!-- Simple logic for demo, usually per subject pass logic -->
+                                    {% if mark.marks_obtained >= 35 %} Pass {% else %} Fail {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="font-weight-bold">
+                                <td>Total</td>
+                                <td>{{ result.total_marks }}</td>
+                                <td>{{ result.result_status }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <button class="btn btn-primary d-print-none" onclick="window.print()">Print Grade Sheet</button>
+                    <a href="{% url 'view_result' %}" class="btn btn-light d-print-none">Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

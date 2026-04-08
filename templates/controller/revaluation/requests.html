@@ -1,0 +1,133 @@
+{% extends 'controller/controller_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Revaluation Requests</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Subject</th>
+                                <th>Reason</th>
+                                <th>Requested At</th>
+                                <th>Current Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in requests %}
+                            <tr>
+                                <td>{{ req.student.name }}</td>
+                                <td>{{ req.subject.subject_name }}</td>
+                                <td>{{ req.reason }}</td>
+                                <td>{{ req.requested_at|date:"d M Y" }}</td>
+                                <td>
+                                    {% if req.status == 'REQUESTED' %}
+                                    <label class="badge badge-warning">Requested</label>
+                                    {% elif req.status == 'COMPLETED' or req.status == 'Completed' %}
+                                    <label class="badge badge-success">Completed</label>
+                                    {% elif req.status == 'REJECTED' or req.status == 'Rejected' %}
+                                    <label class="badge badge-danger">Rejected</label>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if req.status == 'REQUESTED' %}
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#processModal-{{ req.id }}">
+                                        Process
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="processModal-{{ req.id }}" tabindex="-1" role="dialog">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Process Revaluation</h5>
+                                                    <button type="button" class="close" data-bs-dismiss="modal">
+                                                        <span>&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form action="{% url 'process_revaluation' %}" method="POST">
+                                                    <div class="modal-body">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="req_id" value="{{ req.id }}">
+
+                                                        <p><strong>Student:</strong> {{ req.student.name }}</p>
+                                                        <p><strong>Subject:</strong> {{ req.subject.subject_name }}</p>
+
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6">
+                                                                <small class="text-muted">Internal Marks</small>
+                                                                <input type="text" class="form-control"
+                                                                    value="{{ req.mark_details.internal_marks|default:0 }}"
+                                                                    disabled>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <small class="text-muted">Current External</small>
+                                                                <input type="text" class="form-control"
+                                                                    value="{{ req.mark_details.external_marks|default:0 }}"
+                                                                    disabled>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>Action</label>
+                                                            <select class="form-control" name="action"
+                                                                id="action-{{ req.id }}"
+                                                                onchange="toggleMarks({{ req.id }})" required>
+                                                                <option value="Update Marks">Update Marks (New External)
+                                                                </option>
+                                                                <option value="No Change">No Change (Reject)</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group" id="marks-group-{{ req.id }}">
+                                                            <label>New External Marks</label>
+                                                            <input type="number" step="0.5" class="form-control"
+                                                                name="new_marks" placeholder="Enter new external marks">
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save
+                                                            Changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <button class="btn btn-secondary btn-sm" disabled>Processed</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No pending revaluation requests.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleMarks(id) {
+        var val = document.getElementById('action-' + id).value;
+        var group = document.getElementById('marks-group-' + id);
+        if (val === 'Update Marks') {
+            group.style.display = 'block';
+        } else {
+            group.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}

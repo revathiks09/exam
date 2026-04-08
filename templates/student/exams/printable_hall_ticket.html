@@ -1,0 +1,277 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hall Ticket - {{ student.name }}</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .ticket-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 2px solid #000;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            text-transform: uppercase;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        .header h2 {
+            margin: 5px 0;
+            font-size: 18px;
+            font-weight: normal;
+        }
+
+        .header p {
+            margin: 5px 0;
+            font-style: italic;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title span {
+            background-color: #000;
+            color: #fff;
+            padding: 5px 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 4px;
+        }
+
+        .student-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+        }
+
+        .details-left table {
+            width: 100%;
+        }
+
+        .details-left th {
+            text-align: left;
+            padding: 5px 10px 5px 0;
+            width: 120px;
+        }
+
+        .details-right {
+            text-align: right;
+        }
+
+        .photo-box {
+            width: 120px;
+            height: 140px;
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            background-color: #eee;
+        }
+
+        .subject-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .subject-table th,
+        .subject-table td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .subject-table th {
+            background-color: #eee;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .signature {
+            text-align: center;
+        }
+
+        .signature-line {
+            border-top: 1px solid #000;
+            width: 150px;
+            margin-bottom: 5px;
+        }
+
+        .instructions {
+            margin-top: 30px;
+            font-size: 12px;
+            border-top: 1px dashed #ccc;
+            padding-top: 10px;
+        }
+
+        .instructions h4 {
+            margin: 0 0 5px 0;
+            text-decoration: underline;
+        }
+
+        .instructions ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .print-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            width: fit-content;
+        }
+
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+            }
+
+            .ticket-container {
+                box-shadow: none;
+                border: none;
+            }
+
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ticket-container">
+        <div class="header">
+            <h1>ExamEase University</h1>
+            <h2>Online Examination System</h2>
+            <p>123, Education Street, Knowledge City, Country</p>
+        </div>
+
+        <div class="title">
+            <span>Hall Ticket</span>
+        </div>
+
+        <div class="student-details">
+            <div class="details-left">
+                <table>
+                    <tr>
+                        <th>Student Name:</th>
+                        <td><strong>{{ student.user.name }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Register No:</th>
+                        <td>{{ student.regno }}</td>
+                    </tr>
+                    <tr>
+                        <th>Degree / Branch:</th>
+                        <td>{{ student.dept.dept_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Semester:</th>
+                        <td>{{ student.semester.semester_no }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="details-right">
+                <div class="photo-box">
+                    <span>Student Photo</span>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="text-align: center; margin-bottom: 10px;">Exam Timetable</h3>
+        <table class="subject-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Subject Code</th>
+                    <th>Subject Name</th>
+                    <th>Invigilator Sign</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exam in exam_schedule %}
+                <tr>
+                    <td>{{ exam.exam_date }}</td>
+                    <td>{{ exam.start_time }} - {{ exam.end_time }}</td>
+                    <td>SUB-{{ exam.subject.id }}</td>
+                    <td style="text-align: left; padding-left: 15px;">{{ exam.subject.subject_name }}</td>
+                    <td></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No exams scheduled for this semester yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <div class="signature">
+                <div class="signature-line"></div>
+                <span>Student Signature</span>
+            </div>
+            <div class="signature">
+                <img src="{% static 'home/img/signature.png' %}" alt=""
+                    style="height: 40px; display: block; margin: 0 auto; opacity: 0.5;">
+                <div class="signature-line"></div>
+                <span>Controller of Examinations</span>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h4>Instructions to Candidates:</h4>
+            <ul>
+                <li>Candidates must bring this Hall Ticket and a valid ID card to the examination hall.</li>
+                <li>Candidates should report to the exam hall 30 minutes before the scheduled time.</li>
+                <li>Electronic gadgets, books, and written materials are not allowed inside the exam hall.</li>
+                <li>Malpractice of any kind will lead to disqualification.</li>
+            </ul>
+        </div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">Print Hall Ticket</button>
+</body>
+
+</html>

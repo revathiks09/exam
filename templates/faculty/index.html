@@ -1,0 +1,82 @@
+{% extends 'faculty/faculty_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 grid-margin">
+        <div class="d-flex justify-content-between flex-wrap">
+            <div class="d-flex align-items-end flex-wrap">
+                <div class="me-md-3 me-xl-5">
+                    <h2>Statistics Dashboard</h2>
+                    <p class="mb-md-0">Overview of your academic activities.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h4 class="card-title">My Question Papers</h4>
+                        <h2 class="mb-0 text-primary">{{ qp_count }}</h2>
+                    </div>
+                    <i class="icon-docs icon-lg text-primary"></i>
+                </div>
+                <p class="text-muted mt-3 mb-0">Total papers created</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h4 class="card-title">Pending Approval</h4>
+                        <h2 class="mb-0 text-warning">{{ pending_qp }}</h2>
+                    </div>
+                    <i class="icon-clock icon-lg text-warning"></i>
+                </div>
+                <p class="text-muted mt-3 mb-0">Waiting for Controller approval</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h4 class="card-title">Approved Papers</h4>
+                        <h2 class="mb-0 text-success">{{ approved_qp }}</h2>
+                    </div>
+                    <i class="icon-check icon-lg text-success"></i>
+                </div>
+                <p class="text-muted mt-3 mb-0">Papers accepted for exams</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Quick Actions</h4>
+                <div class="template-demo">
+                    <a href="{% url 'add_question_paper' %}" class="btn btn-outline-primary btn-fw">
+                        <i class="icon-plus"></i> Create Question Paper
+                    </a>
+                    <a href="{% url 'enter_internal_marks' %}" class="btn btn-outline-info btn-fw">
+                        <i class="icon-note"></i> Enter Internal Marks
+                    </a>
+                    <a href="{% url 'view_subject_performance' %}" class="btn btn-outline-success btn-fw">
+                        <i class="icon-chart"></i> View Analytics
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

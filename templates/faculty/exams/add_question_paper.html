@@ -1,0 +1,56 @@
+{% extends 'faculty/faculty_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Create New Question Paper</h4>
+                <p class="card-description"> Submit a new question paper via file upload </p>
+                <form class="forms-sample" method="POST" action="{% url 'save_question_paper' %}"
+                    enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="paper_title">Paper Title</label>
+                        <input type="text" class="form-control" id="paper_title" name="paper_title" required
+                            placeholder="e.g. Mid-Term Examination 2026">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Select Subject</label>
+                        <select class="form-control" id="subject" name="subject" required>
+                            <option value="">-- Select Subject --</option>
+                            {% for sub in subjects %}
+                            <option value="{{ sub.id }}">{{ sub.subject_name }} ({{ sub.subject_code }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="semester">Select Semester</label>
+                        <select class="form-control" id="semester" name="semester" required>
+                            <option value="">-- Select Semester --</option>
+                            {% for sem in semesters %}
+                            <option value="{{ sem.id }}">
+                                {{ sem.course.course_name }} - Semester {{ sem.semester_no }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>File upload</label>
+                        <input type="file" name="qp_file" class="file-upload-default" required>
+                        <div class="input-group col-xs-12">
+                            <input type="text" class="form-control file-upload-info" disabled
+                                placeholder="Upload Question Paper (PDF/Doc)">
+                            <span class="input-group-append">
+                                <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                            </span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary me-2">Submit</button>
+                    <a href="{% url 'view_question_papers' %}" class="btn btn-light">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

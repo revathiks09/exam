@@ -1,0 +1,170 @@
+{% extends 'admin/admin_layout.html' %}
+{% load static %}
+
+{% block title %}Add Student - ExamEase{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Add New Student</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'students' %}">Students</a></li>
+            <li class="breadcrumb-item active">Add Student</li>
+        </ol>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-user-graduate"></i> Student Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'save_student' %}">
+                            {% csrf_token %}
+
+                            <h6 class="mb-3 text-muted">Personal Details (User Account)</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">Full Name <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email Address <span
+                                            class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="password" class="form-label">Password <span
+                                            class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select class="form-select" id="status" name="status">
+                                        <option value="1" selected>Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <h6 class="mb-3 text-muted">Academic Details</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="regno" class="form-label">Registration Number <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="regno" name="regno" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="dept_id" class="form-label">Department <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="dept_id" name="dept_id" required>
+                                        <option value="">Select Department</option>
+                                        {% for dept in departments %}
+                                        <option value="{{ dept.id }}">{{ dept.dept_name }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="course_id" class="form-label">Course <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="course_id" name="course_id" required>
+                                        <option value="">Select Course</option>
+                                        {% for course in courses %}
+                                        <option value="{{ course.id }}" data-dept-id="{{ course.dept_id }}">
+                                            {{ course.course_name }} (Dept: {{ course.dept_id }})
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="semester_id" class="form-label">Semester <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="semester_id" name="semester_id" required>
+                                        <option value="">Select Semester</option>
+                                        {% for sem in semesters %}
+                                        <option value="{{ sem.id }}" data-course-id="{{ sem.course_id }}">
+                                            Semester {{sem.semester_no }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{% url 'students' %}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Student
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deptSelect = document.getElementById('dept_id');
+        const courseSelect = document.getElementById('course_id');
+        const semesterSelect = document.getElementById('semester_id');
+
+        // Store original options
+        const allCourses = Array.from(courseSelect.options);
+        const allSemesters = Array.from(semesterSelect.options);
+
+        function filterCourses() {
+            const selectedDept = deptSelect.value;
+            courseSelect.innerHTML = '<option value="">Select Course</option>';
+
+            if (selectedDept) {
+                const filteredCourses = allCourses.filter(option =>
+                    option.dataset.deptId === selectedDept
+                );
+                filteredCourses.forEach(option => courseSelect.add(option.cloneNode(true)));
+            }
+            // Reset semester selection when department changes (and thus course changes)
+            filterSemesters();
+        }
+
+        function filterSemesters() {
+            const selectedCourse = courseSelect.value;
+            semesterSelect.innerHTML = '<option value="">Select Semester</option>';
+
+            if (selectedCourse) {
+                const filteredSemesters = allSemesters.filter(option =>
+                    option.dataset.courseId === selectedCourse
+                );
+                filteredSemesters.forEach(option => semesterSelect.add(option.cloneNode(true)));
+            }
+        }
+
+        deptSelect.addEventListener('change', filterCourses);
+        courseSelect.addEventListener('change', filterSemesters);
+
+        // Initial state: hide options if no selection
+        if (!deptSelect.value) {
+            courseSelect.innerHTML = '<option value="">Select Course</option>';
+        } else {
+            filterCourses(); // Restore correct courses if dept selected (e.g. on validation fail reload, though simplistic here)
+        }
+
+        if (!courseSelect.value) {
+            semesterSelect.innerHTML = '<option value="">Select Semester</option>';
+        }
+    });
+</script>
+{% endblock %}

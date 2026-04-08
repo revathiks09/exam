@@ -1,0 +1,58 @@
+{% extends 'faculty/faculty_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Subject Performance Analytics</h4>
+                <p class="card-description"> Detailed breakdown of student performance by subject. </p>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th> Subject Name </th>
+                                <th> Total Students </th>
+                                <th> Passed </th>
+                                <th> Pass Percentage </th>
+                                <th> Performance Status </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in performance_data %}
+                            <tr>
+                                <td> {{ item.subject_name }} </td>
+                                <td> {{ item.total_students }} </td>
+                                <td> {{ item.passed_students }} </td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar"
+                                            style="width: {{ item.pass_percentage }}%"
+                                            aria-valuenow="{{ item.pass_percentage }}" aria-valuemin="0"
+                                            aria-valuemax="100"></div>
+                                    </div>
+                                    {{ item.pass_percentage }}%
+                                </td>
+                                <td>
+                                    {% if item.pass_percentage >= 75 %}
+                                    <label class="badge badge-success">Excellent</label>
+                                    {% elif item.pass_percentage >= 50 %}
+                                    <label class="badge badge-warning">Average</label>
+                                    {% else %}
+                                    <label class="badge badge-danger">Poor</label>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No analytics data available yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

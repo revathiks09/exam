@@ -1,0 +1,53 @@
+{% extends 'controller/controller_layout.html' %}
+
+{% block title %}Generate Seating Arrangement - ExamEase{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h3 class="page-title">
+        <span class="page-title-icon bg-gradient-primary text-white me-2">
+            <i class="icon-grid"></i>
+        </span> Generate Seating Arrangement
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'controller_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Generate Seating</li>
+        </ul>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="col-md-8 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Auto-Generate Seating Arrangement</h4>
+                <p class="card-description">Select a subject to automatically generate seating arrangements for all students</p>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="subject_id">Subject *</label>
+                        <select class="form-control" id="subject_id" name="subject_id" required>
+                            <option value="">Select Subject</option>
+                            {% for subject in subjects %}
+                            <option value="{{ subject.id }}">{{ subject.subject_name }} (Semester {{ subject.semester.semester_no }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="icon-info"></i> The system will automatically assign hall numbers and seat numbers to
+                        all active students.
+                        Maximum 30 students per hall.
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2"
+                        onclick="return confirm('This will clear existing seating for this subject. Continue?')">
+                        <i class="icon-grid"></i> Generate Seating
+                    </button>
+                    <a href="{% url 'view_seating_arrangement' %}" class="btn btn-light">View Existing Seating</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

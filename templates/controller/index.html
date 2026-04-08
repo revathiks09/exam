@@ -1,0 +1,213 @@
+{% extends 'controller/controller_layout.html' %}
+{% load static %}
+
+{% block title %}Exam Controller Dashboard - ExamEase{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h3 class="page-title">
+        <span class="page-title-icon bg-gradient-primary text-white me-2">
+            <i class="icon-screen-desktop"></i>
+        </span> Dashboard
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">
+                <span></span>Overview <i class="icon-arrow-right align-middle"></i>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row">
+    <div class="col-md-3 stretch-card grid-margin">
+        <div class="card bg-gradient-danger card-img-holder text-white">
+            <div class="card-body">
+                <img src="{% static 'admin/assets/images/dashboard/circle.svg' %}" class="card-img-absolute"
+                    alt="circle-image" />
+                <h4 class="font-weight-normal mb-3">Pending Papers <i class="icon-doc float-right"></i>
+                </h4>
+                <h2 class="mb-5">{{ pending_papers }}</h2>
+                <h6 class="card-text">Awaiting Review</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 stretch-card grid-margin">
+        <div class="card bg-gradient-info card-img-holder text-white">
+            <div class="card-body">
+                <img src="{% static 'admin/assets/images/dashboard/circle.svg' %}" class="card-img-absolute"
+                    alt="circle-image" />
+                <h4 class="font-weight-normal mb-3">Approved Papers <i class="icon-check float-right"></i>
+                </h4>
+                <h2 class="mb-5">{{ approved_papers }}</h2>
+                <h6 class="card-text">Total Approved</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 stretch-card grid-margin">
+        <div class="card bg-gradient-success card-img-holder text-white">
+            <div class="card-body">
+                <img src="{% static 'admin/assets/images/dashboard/circle.svg' %}" class="card-img-absolute"
+                    alt="circle-image" />
+                <h4 class="font-weight-normal mb-3">Upcoming Exams <i class="icon-calendar float-right"></i>
+                </h4>
+                <h2 class="mb-5">{{ upcoming_exams }}</h2>
+                <h6 class="card-text">Scheduled</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 stretch-card grid-margin">
+        <div class="card bg-gradient-warning card-img-holder text-white">
+            <div class="card-body">
+                <img src="{% static 'admin/assets/images/dashboard/circle.svg' %}" class="card-img-absolute"
+                    alt="circle-image" />
+                <h4 class="font-weight-normal mb-3">Hall Tickets <i class="icon-badge float-right"></i>
+                </h4>
+                <h2 class="mb-5">{{ hall_tickets_generated }}</h2>
+                <h6 class="card-text">Generated</h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Second Row Statistics -->
+<div class="row">
+    <div class="col-md-4 stretch-card grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-title">Total Question Papers</p>
+                <h1>{{ total_papers }}</h1>
+                <p class="text-muted">Approved: {{ approved_papers }} | Rejected: {{ rejected_papers }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 stretch-card grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-title">Mark Entry Status</p>
+                <h1>{{ total_marks }}</h1>
+                <p class="text-muted">Pending: {{ pending_marks }} | Approved: {{ approved_marks }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 stretch-card grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-title">Seating Arrangements</p>
+                <h1>{{ seating_arranged }}</h1>
+                <p class="text-muted">Total Students: {{ total_students }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Recent Question Papers</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Paper Title</th>
+                                <th>Subject</th>
+                                <th>Faculty</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for paper in recent_papers %}
+                            <tr>
+                                <td>{{ paper.paper_title }}</td>
+                                <td>{{ paper.subject.subject_name }}</td>
+                                <td>{{ paper.faculty.name }}</td>
+                                <td>
+                                    {% if paper.status|lower == 'pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                    {% elif paper.status|lower == 'approved' %}
+                                    <span class="badge badge-success">Approved</span>
+                                    {% else %}
+                                    <span class="badge badge-danger">Rejected</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No question papers submitted yet</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Recent Exam Schedules</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for exam in recent_exams %}
+                            <tr>
+                                <td>{{ exam.subject.subject_name }}</td>
+                                <td>{{ exam.exam_date }}</td>
+                                <td>{{ exam.start_time }} - {{ exam.end_time }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center">No exam schedules created yet</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Quick Actions</h4>
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <a href="{% url 'view_submitted_papers' %}" class="btn btn-primary btn-block">
+                            <i class="icon-doc"></i> Review Papers
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'create_exam_schedule' %}" class="btn btn-success btn-block">
+                            <i class="icon-calendar"></i> Create Schedule
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'generate_seating' %}" class="btn btn-info btn-block">
+                            <i class="icon-grid"></i> Generate Seating
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'monitor_mark_entry' %}" class="btn btn-warning btn-block">
+                            <i class="icon-chart"></i> Monitor Marks
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

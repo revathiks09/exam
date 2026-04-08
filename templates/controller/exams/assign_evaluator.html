@@ -1,0 +1,44 @@
+{% extends 'controller/controller_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Assign Scripts to Evaluator</h4>
+                <p class="card-description">
+                    Select a subject and an evaluator to assign examination scripts for grading.
+                </p>
+                <form class="forms-sample" method="POST" action="{% url 'assign_evaluator' %}">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="subject_id">Subject</label>
+                        <select class="form-control" id="subject_id" name="subject_id" required>
+                            <option value="">Select Subject</option>
+                            {% for subject in subjects %}
+                            <option value="{{ subject.id }}">
+                                {{ subject.subject_name }}
+                                ({{ subject.semester.course.course_name }} - Sem {{ subject.semester.semester_no }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="evaluator_id">Evaluator</label>
+                        <select class="form-control" id="evaluator_id" name="evaluator_id" required>
+                            <option value="">Select Evaluator</option>
+                            {% for evaluator in evaluators %}
+                            <option value="{{ evaluator.id }}">{{ evaluator.name }} ({{ evaluator.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mr-2">Assign Scripts</button>
+                    <a href="{% url 'controller_dashboard' %}" class="btn btn-light">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

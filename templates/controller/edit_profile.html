@@ -1,0 +1,34 @@
+{% extends 'controller/controller_layout.html' %}
+{% load static %}
+
+{% block title %}Edit Profile - ExamEase{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Edit Profile</h4>
+                <p class="card-description">Update your personal information</p>
+
+                <form class="forms-sample" method="POST" action="{% url 'update_profile_controller' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="inputName">Name</label>
+                        <input type="text" class="form-control" id="inputName" name="name" value="{{ user.name }}"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail">Email address</label>
+                        <input type="email" class="form-control" id="inputEmail" name="email" value="{{ user.email }}"
+                            required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary me-2">Update Profile</button>
+                    <a href="{% url 'controller_profile' %}" class="btn btn-light">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'controller/controller_layout.html' %}
+
+{% block title %}Exam Timetable - ExamEase{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h3 class="page-title">
+        <span class="page-title-icon bg-gradient-primary text-white me-2">
+            <i class="icon-calendar"></i>
+        </span> Exam Timetable
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'controller_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Timetable</li>
+        </ul>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="card-title mb-0">Scheduled Exams</h4>
+                    <a href="{% url 'create_exam_schedule' %}" class="btn btn-primary">
+                        <i class="icon-plus"></i> Add New Schedule
+                    </a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Subject</th>
+                                <th>Semester</th>
+                                <th>Exam Date</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Duration</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for schedule in schedules %}
+                            <tr>
+                                <td>{{ schedule.id }}</td>
+                                <td>{{ schedule.subject.subject_name }}</td>
+                                <td>Semester {{ schedule.subject.semester.semester_no }}</td>
+                                <td>{{ schedule.exam_date }}</td>
+                                <td>{{ schedule.start_time }}</td>
+                                <td>{{ schedule.end_time }}</td>
+                                <td>
+                                    {% widthratio schedule.end_time.hour 1 60 as end_minutes %}
+                                    {% widthratio schedule.start_time.hour 1 60 as start_minutes %}
+                                    {% widthratio schedule.end_time.minute 1 1 as end_min %}
+                                    {% widthratio schedule.start_time.minute 1 1 as start_min %}
+                                    3 hours
+                                </td>
+                                <td>
+                                    <a href="{% url 'edit_exam_schedule' schedule.id %}" class="btn btn-sm btn-info">
+                                        <i class="icon-pencil"></i> Edit
+                                    </a>
+                                    <a href="{% url 'delete_exam_schedule' schedule.id %}" class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Are you sure you want to delete this schedule?')">
+                                        <i class="icon-trash"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center">No exam schedules created yet</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

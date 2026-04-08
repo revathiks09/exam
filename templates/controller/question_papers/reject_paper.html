@@ -1,0 +1,45 @@
+{% extends 'controller/controller_layout.html' %}
+
+{% block title %}Reject Question Paper - ExamEase{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h3 class="page-title">
+        <span class="page-title-icon bg-gradient-danger text-white me-2">
+            <i class="icon-close"></i>
+        </span> Reject Question Paper
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'controller_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'view_submitted_papers' %}">Question Papers</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Reject</li>
+        </ul>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="col-md-8 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Reject Paper: {{ paper.paper_title }}</h4>
+                <p class="card-description">Subject: {{ paper.subject.subject_name }} | Faculty: {{ paper.faculty.name
+                    }}</p>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="reason">Reason for Rejection *</label>
+                        <textarea class="form-control" id="reason" name="reason" rows="5"
+                            placeholder="Please provide a detailed reason for rejection..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger mr-2">
+                        <i class="icon-close"></i> Reject Paper
+                    </button>
+                    <a href="{% url 'view_submitted_papers' %}" class="btn btn-light">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

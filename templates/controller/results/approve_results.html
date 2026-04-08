@@ -1,0 +1,61 @@
+{% extends 'controller/controller_layout.html' %}
+
+{% block title %}Approve Final Results - ExamEase{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h3 class="page-title">
+        <span class="page-title-icon bg-gradient-primary text-white me-2">
+            <i class="icon-badge"></i>
+        </span> Approve Final Results
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'controller_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Approve Results</li>
+        </ul>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="col-md-8 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Approve and Publish Results</h4>
+                <p class="card-description">Select a semester to calculate and publish final results for all students
+                </p>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="semester_id">Semester *</label>
+                        <select class="form-control" id="semester_id" name="semester_id" required>
+                            <option value="">Select Semester</option>
+                            {% for semester in semesters %}
+                            <option value="{{ semester.id }}">
+                                {{ semester.course.course_name }} - Semester {{ semester.semester_no }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="icon-info"></i> <strong>Important:</strong> This action will:
+                        <ul>
+                            <li>Calculate total marks for all students in the selected semester</li>
+                            <li>Assign grades based on percentage (A+, A, B+, B, C, D, F)</li>
+                            <li>Determine pass/fail status (40% minimum to pass)</li>
+                            <li>Publish results for students to view</li>
+                        </ul>
+                        Existing results for the same semester will be skipped.
+                    </div>
+                    <button type="submit" class="btn btn-success mr-2"
+                        onclick="return confirm('Are you sure you want to approve and publish results for this semester?')">
+                        <i class="icon-check"></i> Approve & Publish Results
+                    </button>
+                    <a href="{% url 'view_results' %}" class="btn btn-light">View Published Results</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

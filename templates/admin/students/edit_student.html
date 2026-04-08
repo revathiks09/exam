@@ -1,0 +1,223 @@
+{% extends 'admin/admin_layout.html' %}
+{% load static %}
+
+{% block title %}Edit Student - ExamEase{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Edit Student</h1>
+
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item">
+                <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'students' %}">Students</a>
+            </li>
+            <li class="breadcrumb-item active">Edit Student</li>
+        </ol>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-sm">
+
+                    <div class="card-header bg-warning text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user-edit"></i> Edit Student Information
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'update_student' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="student_id" value="{{ student.id }}">
+
+                            <!-- ================= PERSONAL DETAILS ================= -->
+                            <h6 class="mb-3 text-muted">Personal Details (User Account)</h6>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="name"
+                                           value="{{ student.user.name }}"
+                                           required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Email Address <span class="text-danger">*</span></label>
+                                    <input type="email"
+                                           class="form-control"
+                                           name="email"
+                                           value="{{ student.user.email }}"
+                                           required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Password</label>
+                                    <input type="password"
+                                           class="form-control"
+                                           name="password"
+                                           placeholder="Leave blank to keep current password">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" name="status">
+                                        <option value="1" {% if student.user.status == 1 %}selected{% endif %}>
+                                            Active
+                                        </option>
+                                        <option value="0" {% if student.user.status == 0 %}selected{% endif %}>
+                                            Inactive
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <!-- ================= ACADEMIC DETAILS ================= -->
+                            <h6 class="mb-3 text-muted">Academic Details</h6>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">
+                                        Registration Number <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="regno"
+                                           value="{{ student.regno }}"
+                                           required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">
+                                        Department <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="form-select" id="dept_id" name="dept_id" required>
+                                        <option value="">Select Department</option>
+                                        {% for dept in departments %}
+                                            <option value="{{ dept.id }}"
+                                                {% if student.dept_id == dept.id %}selected{% endif %}>
+                                                {{ dept.dept_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">
+                                        Course <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="form-select" id="course_id" name="course_id" required>
+                                        <option value="">Select Course</option>
+                                        {% for course in courses %}
+                                            <option value="{{ course.id }}"
+                                                    data-dept-id="{{ course.dept_id }}"
+                                                    {% if student.course_id == course.id %}selected{% endif %}>
+                                                {{ course.course_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">
+                                        Semester <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="form-select" id="semester_id" name="semester_id" required>
+                                        <option value="">Select Semester</option>
+                                        {% for sem in semesters %}
+                                            <option value="{{ sem.id }}"
+                                                    data-course-id="{{ sem.course_id }}"
+                                                    {% if student.semester_id == sem.id %}selected{% endif %}>
+                                                Semester {{ sem.semester_no }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- ================= ACTION BUTTONS ================= -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{% url 'students' %}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Update Student
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const deptSelect = document.getElementById('dept_id');
+    const courseSelect = document.getElementById('course_id');
+    const semesterSelect = document.getElementById('semester_id');
+
+    const allCourses = Array.from(courseSelect.options);
+    const allSemesters = Array.from(semesterSelect.options);
+
+    const currentCourseId = "{{ student.course_id }}";
+    const currentSemesterId = "{{ student.semester_id }}";
+
+    function filterCourses() {
+        const deptId = deptSelect.value;
+        courseSelect.innerHTML = '<option value="">Select Course</option>';
+
+        if (deptId) {
+            allCourses
+                .filter(opt => opt.dataset.deptId === deptId)
+                .forEach(opt => courseSelect.add(opt.cloneNode(true)));
+        }
+
+        courseSelect.value = currentCourseId;
+        filterSemesters();
+    }
+
+    function filterSemesters() {
+        const courseId = courseSelect.value;
+        semesterSelect.innerHTML = '<option value="">Select Semester</option>';
+
+        if (courseId) {
+            allSemesters
+                .filter(opt => opt.dataset.courseId === courseId)
+                .forEach(opt => semesterSelect.add(opt.cloneNode(true)));
+        }
+
+        semesterSelect.value = currentSemesterId;
+    }
+
+    deptSelect.addEventListener('change', function () {
+        courseSelect.value = "";
+        semesterSelect.value = "";
+        filterCourses();
+    });
+
+    courseSelect.addEventListener('change', function () {
+        semesterSelect.value = "";
+        filterSemesters();
+    });
+
+    if (deptSelect.value) {
+        filterCourses();
+    }
+});
+</script>
+
+{% endblock %}

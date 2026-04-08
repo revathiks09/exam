@@ -1,0 +1,15 @@
+Checking marks for Subject: data structure
+
+Student: Joshy James  (ID: 23)
+  Internal: 19.0
+  External: 50.0
+  Obtained: 69.0
+  Moderated: 69.0
+  Status: Approved
+
+Student: Jos (ID: 24)
+  Internal: 20.0
+  External: 23.0
+  Obtained: 43.0
+  Moderated: None
+  Status: Approved

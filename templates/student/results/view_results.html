@@ -1,0 +1,83 @@
+{% extends 'student/student_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">My Results</h4>
+                <p class="card-description">View your published semester results and marks</p>
+
+                {% for item in results_with_marks %}
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            {{ item.result.semester.course.course_name }} - Semester {{ item.result.semester.semester_no
+                            }}
+                        </h5>
+                        <small>Published on: {{ item.result.published_at|date:"d M Y" }}</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <strong>Total Marks:</strong> {{ item.result.total_marks }}
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Grade:</strong>
+                                <span class="badge badge-success">{{ item.result.grade }}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Status:</strong>
+                                {% if item.result.result_status|lower == 'pass' %}
+                                <span class="badge badge-success">PASS</span>
+                                {% else %}
+                                <span class="badge badge-danger">FAIL</span>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{% url 'download_grade_sheet' item.result.id %}"
+                                    class="btn btn-sm btn-outline-primary">
+                                    <i class="icon-printer"></i> Print Grade Sheet
+                                </a>
+                            </div>
+                        </div>
+
+                        <h6>Subject-wise Marks:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Marks Obtained</th>
+                                        <th>Moderated Marks</th>
+                                        <th>Final Marks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for mark in item.marks %}
+                                    <tr>
+                                        <td>{{ mark.subject.subject_name }}</td>
+                                        <td>{{ mark.marks_obtained }}</td>
+                                        <td>{{ mark.moderated_marks|default:"--" }}</td>
+                                        <td><strong>{{ mark.moderated_marks|default:mark.marks_obtained }}</strong></td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">No marks available</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="alert alert-info">
+                    <i class="icon-info"></i> No results published yet. Please check back later.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

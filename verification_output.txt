@@ -1,0 +1,20 @@
+--- START VERIFICATION ---
+Stats: 6 Active Departments
+D: ID=1 | Name='Computer Science'
+D: ID=2 | Name='Electronics & Communication'
+D: ID=3 | Name='Mechanical Engineering'
+D: ID=4 | Name='Civil Engineering'
+D: ID=5 | Name='Information Technology'
+D: ID=6 | Name='Electrical Engineering'
+
+Stats: Checking Courses...
+Stats: 8 Active Courses
+C: ID=1 | Name='B.Tech Computer Science' | Dept='Computer Science'
+C: ID=2 | Name='B.Tech Electronics & Communication' | Dept='Electronics & Communication'
+C: ID=3 | Name='B.Tech Mechanical Engineering' | Dept='Mechanical Engineering'
+C: ID=4 | Name='B.Tech Civil Engineering' | Dept='Civil Engineering'
+C: ID=5 | Name='B.Tech Information Technology' | Dept='Information Technology'
+C: ID=6 | Name='B.Tech Electrical Engineering' | Dept='Electrical Engineering'
+C: ID=7 | Name='M.Tech Computer Science' | Dept='Computer Science'
+C: ID=8 | Name='M.Tech Information Technology' | Dept='Information Technology'
+--- END VERIFICATION ---

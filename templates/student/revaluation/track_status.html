@@ -1,0 +1,52 @@
+{% extends 'student/student_layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Revaluation Status</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Requested At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in requests %}
+                            <tr>
+                                <td>{{ req.subject.subject_name }}</td>
+                                <td>{{ req.reason }}</td>
+                                <td>
+                                    {% if req.status == 'Pending' %}
+                                    <label class="badge badge-warning">Pending</label>
+                                    {% elif req.status == 'Approved' %}
+                                    <label class="badge badge-success">Approved / Completed</label>
+                                    {% elif req.status == 'Rejected' %}
+                                    <label class="badge badge-danger">Rejected</label>
+                                    {% else %}
+                                    <label class="badge badge-secondary">{{ req.status }}</label>
+                                    {% endif %}
+                                </td>
+                                <td>{{ req.requested_at }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No requests found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-3">
+        <a href="{% url 'apply_revaluation' %}" class="btn btn-primary">New Request</a>
+    </div>
+</div>
+{% endblock %}

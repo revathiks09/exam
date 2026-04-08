@@ -1,0 +1,72 @@
+{% extends 'admin/admin_layout.html' %}
+{% load static %}
+
+{% block title %}Edit Course - ExamEase{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Edit Course</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'courses' %}">Courses</a></li>
+            <li class="breadcrumb-item active">Edit Course</li>
+        </ol>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-edit"></i> Edit Course Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'update_course' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="course_id" value="{{ course.id }}">
+
+                            <div class="mb-3">
+                                <label for="course_name" class="form-label">Course Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="course_name" name="course_name"
+                                    value="{{ course.course_name }}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="dept_id" class="form-label">Department <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="dept_id" name="dept_id" required>
+    <option value="">Select Department</option>
+    {% for dept in departments %}
+        <option value="{{ dept.id }}"
+            {% if course.dept_id == dept.id %}selected{% endif %}>
+            {{ dept.dept_name }}
+        </option>
+    {% endfor %}
+</select>
+
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="1" {% if course.status == 1 %}selected{% endif %}>Active</option>
+                                    <option value="0" {% if course.status == 0 %}selected{% endif %}>Inactive</option>
+                                </select>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{% url 'courses' %}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-info">
+                                    <i class="fas fa-save"></i> Update Course
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
